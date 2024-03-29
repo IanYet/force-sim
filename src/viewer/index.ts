@@ -8,6 +8,9 @@ const scene = new Scene()
 const control = new OrbitControls(camera, renderer.domElement)
 const stats = new Stats()
 
+/**
+ * global three context
+ */
 export const glContext = {
 	renderer,
 	camera,
@@ -17,7 +20,11 @@ export const glContext = {
 	loopId: 0,
 }
 
-export function initEditor() {
+/**
+ * initialize three
+ * @returns
+ */
+export function initViewer() {
 	const { renderer, camera, scene, control, stats } = glContext
 	const el = document.getElementById('app')
 	//@ts-ignore

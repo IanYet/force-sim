@@ -1,8 +1,8 @@
-import { initEditor } from './editor'
+import { initViewer } from './viewer'
 import './style.css'
 
 function main() {
-	initEditor()
+	initViewer()
 }
 
 main()
