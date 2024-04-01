@@ -4,6 +4,7 @@ export interface Vertex {
 	velocity?: number[]
 	radius?: number
 	charge?: number
+	weight?: number
 }
 
 export interface Edge {
