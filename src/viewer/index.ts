@@ -1,6 +1,18 @@
-import { PerspectiveCamera, WebGLRenderer, Scene } from 'three'
-import { OrbitControls } from 'three/examples/jsm/Addons.js'
+import {
+	PerspectiveCamera,
+	WebGLRenderer,
+	Scene,
+	Mesh,
+	MeshBasicMaterial,
+	IcosahedronGeometry,
+	Points,
+} from 'three'
+import { Line2, OrbitControls } from 'three/examples/jsm/Addons.js'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
+import { initGraph } from './graph'
+import { Graph } from '../lib'
+
+export { updateGraph } from './draw'
 
 const camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000)
 const renderer = new WebGLRenderer({ alpha: true, antialias: true })
@@ -18,6 +30,9 @@ export const glContext = {
 	control,
 	stats,
 	loopId: 0,
+	graph: {} as Graph,
+	points: {} as Points,
+	lines: [] as Line2[],
 }
 
 /**
@@ -45,9 +60,15 @@ export function initViewer() {
 	scene.add(camera)
 
 	control.update()
-	control.enabled = false
+	control.enabled = true
 
 	el.appendChild(stats.dom)
+
+	const cube = new Mesh(
+		new IcosahedronGeometry(5, 1),
+		new MeshBasicMaterial({ color: 0x888888, wireframe: true })
+	)
+	scene.add(cube)
 
 	window.addEventListener('resize', () => {
 		renderer.setSize(window.innerWidth, window.innerHeight)
@@ -56,6 +77,8 @@ export function initViewer() {
 	})
 
 	glContext.loopId = requestAnimationFrame(loop)
+
+	initGraph()
 }
 
 function loop(_: number) {

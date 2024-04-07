@@ -14,3 +14,8 @@ export interface Edge {
 	length?: number
 	factor?: number
 }
+
+export interface Graph {
+	vertices: Vertex[]
+	edges: Edge[]
+}

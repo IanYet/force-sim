@@ -1,1 +1,1 @@
-export type { Vertex, Edge } from './type'
+export type { Vertex, Edge, Graph } from './type'
