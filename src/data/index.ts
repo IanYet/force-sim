@@ -42,7 +42,6 @@ export function geneData(vertexNum: number, edgeNum: number): Graph {
 	}
 
 	const edgeSet: Set<string> = new Set()
-	//generate edges
 	for (let i = 0; i < edgeNum; ++i) {
 		let [start, end] = [
 			Math.floor(Math.random() * edgeNum),
