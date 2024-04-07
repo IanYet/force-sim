@@ -5,7 +5,9 @@ import { Line2, LineGeometry, LineMaterial } from 'three/examples/jsm/Addons.js'
 
 /**
  * initial graph in threejs.
+ *
  * vertices -> Points
+ *
  * edges -> Line2[]
  *
  * @returns
@@ -21,7 +23,7 @@ export async function initGraph() {
 	scene.add(points)
 
 	for (let edge of data.edges) {
-		const line = initLine(edge)
+		const line = initEdge(edge)
 		glContext.lines.push(line)
 		scene.add(line)
 	}
@@ -64,7 +66,7 @@ const lineMat = new LineMaterial({
 	resolution: new Vector2(window.innerWidth, window.innerHeight),
 })
 
-function initLine(edge: Edge): Line2 {
+function initEdge(edge: Edge): Line2 {
 	const {
 		graph: { vertices },
 	} = glContext

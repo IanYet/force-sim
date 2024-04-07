@@ -10,7 +10,7 @@ force simulator for graph layout
     -   [x] generate mock data
     -   [x] show vertices with pointscloud
     -   [x] show edges with line2
-    -   [ ] update points and line2
+    -   [x] update points and line2
 
 -   [ ] implement simulator powered by cpu
 

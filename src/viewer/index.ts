@@ -12,6 +12,8 @@ import Stats from 'three/examples/jsm/libs/stats.module.js'
 import { initGraph } from './graph'
 import { Graph } from '../lib'
 
+export { updateGraph } from './draw'
+
 const camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000)
 const renderer = new WebGLRenderer({ alpha: true, antialias: true })
 const scene = new Scene()
