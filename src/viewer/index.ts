@@ -5,10 +5,12 @@ import {
 	Mesh,
 	MeshBasicMaterial,
 	IcosahedronGeometry,
+	Points,
 } from 'three'
-import { OrbitControls } from 'three/examples/jsm/Addons.js'
+import { Line2, OrbitControls } from 'three/examples/jsm/Addons.js'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
 import { initGraph } from './graph'
+import { Graph } from '../lib'
 
 const camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000)
 const renderer = new WebGLRenderer({ alpha: true, antialias: true })
@@ -26,6 +28,9 @@ export const glContext = {
 	control,
 	stats,
 	loopId: 0,
+	graph: {} as Graph,
+	points: {} as Points,
+	lines: [] as Line2[],
 }
 
 /**
