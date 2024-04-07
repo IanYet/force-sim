@@ -8,7 +8,7 @@ force simulator for graph layout
 
     -   [x] initialize three
     -   [x] generate mock data
-    -   [ ] show vertices with pointscloud
+    -   [x] show vertices with pointscloud
     -   [ ] show edges with linesegments
 
 -   [ ] implement simulator powered by cpu

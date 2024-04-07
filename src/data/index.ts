@@ -1,10 +1,5 @@
-import { Edge, Vertex } from '../lib'
+import { Graph } from '../lib'
 import { uuid } from '../utils'
-
-interface Graph {
-	vertices: Vertex[]
-	edges: Edge[]
-}
 
 export function geneData(vertexNum: number, edgeNum: number): Graph {
 	const graphData: Graph = {
