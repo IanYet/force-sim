@@ -47,7 +47,7 @@ async function initVertices(vertices: Vertex[]): Promise<Points> {
 	const mat = new ShaderMaterial({
 		uniforms: {
 			color: { value: new Color(0xffffff) },
-			pointSize: { value: 20 },
+			pointSize: { value: 1000 },
 		},
 		vertexShader: (await import('./points.vs?raw')).default as unknown as string,
 		fragmentShader: (await import('./points.fs?raw')).default as unknown as string,

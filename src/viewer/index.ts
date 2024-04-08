@@ -10,7 +10,7 @@ import {
 import { Line2, OrbitControls } from 'three/examples/jsm/Addons.js'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
 import { initGraph } from './graph'
-import { Graph } from '../lib'
+import { ForceSimulator, Graph } from '../lib'
 
 export { updateGraph } from './draw'
 
@@ -54,7 +54,7 @@ export function initViewer() {
 	renderer.setClearAlpha(0)
 	el.appendChild(renderer.domElement)
 
-	camera.position.set(0, 0, 100)
+	camera.position.set(0, 0, 10)
 	camera.updateProjectionMatrix()
 
 	scene.add(camera)
@@ -65,7 +65,7 @@ export function initViewer() {
 	el.appendChild(stats.dom)
 
 	const cube = new Mesh(
-		new IcosahedronGeometry(5, 1),
+		new IcosahedronGeometry(1, 1),
 		new MeshBasicMaterial({ color: 0x888888, wireframe: true })
 	)
 	scene.add(cube)
@@ -79,6 +79,9 @@ export function initViewer() {
 	glContext.loopId = requestAnimationFrame(loop)
 
 	initGraph()
+
+	const sim = new ForceSimulator(10)
+	sim.l()
 }
 
 function loop(_: number) {
