@@ -80,25 +80,51 @@ export class ForceSimulator {
 		this.#graphData = graphData
 	}
 
-	initGraph(graphData: GraphBasic) {
+	initGraph(graphData: GraphBasic): Graph {
 		const { vertices, edges } = graphData
 		const data: Graph = { vertices: [], edges: [] }
 		this.#graphData = data
+
+		const d = this.#dimension
 
 		for (let i = 0; i < vertices.length; ++i) {
 			const vertex = vertices[i]
 			const vertexBasic: Vertex = { ...vertex, coord: [], velocity: [] }
 			data.vertices.push(vertexBasic)
 
-			for (let j = 0; j < this.#dimension; ++j) {
-				vertexBasic.velocity[j] = 0
-				vertexBasic.coord[j] = i
-			}
+			vertexBasic.velocity.length = d
+			vertexBasic.velocity.fill(0)
 		}
 
 		for (let edge of edges) {
 			data.edges.push({ ...edge })
 		}
+
+		//place vertices evenly across the space from the center
+		const coordSet = new Set<string>()
+		const queue = [new Array(d).fill(0)]
+
+		while (coordSet.size < vertices.length) {
+			const coord = queue.shift()!
+			coordSet.add(coord.join('~'))
+
+			for (let i = 0; i < d; ++i) {
+				const [left, right] = [[...coord], [...coord]]
+				left[i] = coord[i] - 1
+				right[i] = coord[i] + 1
+
+				if (!coordSet.has(left.join('~'))) queue.push(left)
+				if (!coordSet.has(right.join('~'))) queue.push(right)
+			}
+		}
+
+		const coordIter = coordSet.entries()
+		for (let vertex of data.vertices) {
+			const coord = coordIter.next().value[0].split('~') as number[]
+			vertex.coord = coord.map((c) => c * this.#eLength)
+		}
+
+		return data
 	}
 
 	tick() {

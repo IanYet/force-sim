@@ -1,15 +1,7 @@
-import {
-	PerspectiveCamera,
-	WebGLRenderer,
-	Scene,
-	Mesh,
-	MeshBasicMaterial,
-	IcosahedronGeometry,
-	Points,
-} from 'three'
+import { PerspectiveCamera, WebGLRenderer, Scene, Points } from 'three'
 import { Line2, OrbitControls } from 'three/examples/jsm/Addons.js'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
-import { initGraph } from './graph'
+import { initGraph, lineMat } from './graph'
 import { ForceSimulator, GraphBasic } from '../lib'
 import { updateGraph } from './draw'
 
@@ -55,7 +47,7 @@ export async function initViewer() {
 	renderer.setClearAlpha(0)
 	el.appendChild(renderer.domElement)
 
-	camera.position.set(0, 0, 10)
+	camera.position.set(0, 0, 100)
 	camera.updateProjectionMatrix()
 
 	scene.add(camera)
@@ -65,13 +57,8 @@ export async function initViewer() {
 
 	el.appendChild(stats.dom)
 
-	const cube = new Mesh(
-		new IcosahedronGeometry(1, 1),
-		new MeshBasicMaterial({ color: 0x888888, wireframe: true })
-	)
-	scene.add(cube)
-
 	window.addEventListener('resize', () => {
+		lineMat.resolution.set(window.innerWidth, window.innerHeight)
 		renderer.setSize(window.innerWidth, window.innerHeight)
 		camera.aspect = window.innerWidth / window.innerHeight
 		camera.updateProjectionMatrix()
@@ -82,7 +69,7 @@ export async function initViewer() {
 	await initGraph()
 
 	const sim = new ForceSimulator(3)
-	sim.initGraph(glContext.graph)
+	console.log(sim.initGraph(glContext.graph))
 
 	sim.onUpdate = updateGraph
 	sim.tick()

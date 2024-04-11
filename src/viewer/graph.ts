@@ -60,7 +60,7 @@ async function initVertices(vertices: VertexBasic[]): Promise<Points> {
 	return points
 }
 
-const lineMat = new LineMaterial({
+export const lineMat = new LineMaterial({
 	color: 0xffff00,
 	linewidth: 1.5,
 	resolution: new Vector2(window.innerWidth, window.innerHeight),
