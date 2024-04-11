@@ -11,8 +11,9 @@ import { Line2, OrbitControls } from 'three/examples/jsm/Addons.js'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
 import { initGraph } from './graph'
 import { ForceSimulator, Graph } from '../lib'
+import { updateGraph } from './draw'
 
-export { updateGraph } from './draw'
+export { updateGraph }
 
 const camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000)
 const renderer = new WebGLRenderer({ alpha: true, antialias: true })
@@ -39,7 +40,7 @@ export const glContext = {
  * initialize three
  * @returns
  */
-export function initViewer() {
+export async function initViewer() {
 	const { renderer, camera, scene, control, stats } = glContext
 	const el = document.getElementById('app')
 	//@ts-ignore
@@ -78,10 +79,13 @@ export function initViewer() {
 
 	glContext.loopId = requestAnimationFrame(loop)
 
-	initGraph()
+	await initGraph()
 
-	const sim = new ForceSimulator(10)
-	sim.l()
+	const sim = new ForceSimulator(3)
+	sim.initGraph(glContext.graph)
+
+	sim.onUpdate = updateGraph
+	sim.tick()
 }
 
 function loop(_: number) {

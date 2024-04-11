@@ -57,6 +57,21 @@ export class ForceSimulator {
 	 */
 	#eFactor: number = 1
 
+	/**
+	 *
+	 */
+	onStart: (graphData: GraphBasic) => void = () => {}
+
+	/**
+	 *
+	 */
+	onUpdate: (graphData: GraphBasic) => void = () => {}
+
+	/**
+	 *
+	 */
+	onEnd: (graphData: GraphBasic) => void = () => {}
+
 	constructor(dimension: number = 3) {
 		this.#dimension = dimension
 	}
@@ -77,7 +92,7 @@ export class ForceSimulator {
 
 			for (let j = 0; j < this.#dimension; ++j) {
 				vertexBasic.velocity[j] = 0
-				vertexBasic.coord[j] = 0
+				vertexBasic.coord[j] = i
 			}
 		}
 
@@ -86,7 +101,9 @@ export class ForceSimulator {
 		}
 	}
 
-	l() {
-		console.log(this.#dimension, this.#graphData)
+	tick() {
+		if (!this.#graphData) return
+
+		this.onUpdate(this.#graphData)
 	}
 }

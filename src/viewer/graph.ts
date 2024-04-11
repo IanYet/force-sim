@@ -13,7 +13,7 @@ import { Line2, LineGeometry, LineMaterial } from 'three/examples/jsm/Addons.js'
  * @returns
  */
 export async function initGraph() {
-	const data: Graph = await import('../data/data0.json')
+	const data: Graph = (await import('../data/data0.json')).default
 	glContext.graph = data
 
 	const { scene } = glContext
@@ -47,7 +47,7 @@ async function initVertices(vertices: Vertex[]): Promise<Points> {
 	const mat = new ShaderMaterial({
 		uniforms: {
 			color: { value: new Color(0xffffff) },
-			pointSize: { value: 1000 },
+			pointSize: { value: 20 },
 		},
 		vertexShader: (await import('./points.vs?raw')).default as unknown as string,
 		fragmentShader: (await import('./points.fs?raw')).default as unknown as string,
