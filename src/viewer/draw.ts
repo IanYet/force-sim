@@ -12,7 +12,7 @@ export function updateGraph(graph: Graph) {
 	updateVertices(graph.vertices, points)
 
 	for (let i = 0; i < graph.edges.length; ++i) {
-		updateEdge(graph.edges[i], lines[i])
+		updateEdge(graph.edges[i], graph.vertices, lines[i])
 	}
 }
 
@@ -26,11 +26,7 @@ function updateVertices(vertices: Vertex[], points: Points) {
 	attr.needsUpdate = true
 }
 
-function updateEdge(edge: Edge, line: Line2) {
-	const {
-		graph: { vertices },
-	} = glContext
-
+function updateEdge(edge: Edge, vertices: Vertex[], line: Line2) {
 	const [source, target] = [
 		vertices.find((v) => v.id === edge.source)!,
 		vertices.find((v) => v.id === edge.target)!,
