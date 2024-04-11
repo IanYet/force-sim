@@ -1,4 +1,4 @@
-import { Graph, GraphBasic, VertexBasic } from './type'
+import { GraphBasic, Graph, Vertex } from './type'
 
 export class ForceSimulator {
 	/**
@@ -9,7 +9,7 @@ export class ForceSimulator {
 	/**
 	 * graphData
 	 */
-	#graphData?: GraphBasic
+	#graphData?: Graph
 
 	/**
 	 * Vertex radius, used if vertex.radius doesn't exist.
@@ -60,34 +60,34 @@ export class ForceSimulator {
 	/**
 	 *
 	 */
-	onStart: (graphData: GraphBasic) => void = () => {}
+	onStart: (graphData: Graph) => void = () => {}
 
 	/**
 	 *
 	 */
-	onUpdate: (graphData: GraphBasic) => void = () => {}
+	onUpdate: (graphData: Graph) => void = () => {}
 
 	/**
 	 *
 	 */
-	onEnd: (graphData: GraphBasic) => void = () => {}
+	onEnd: (graphData: Graph) => void = () => {}
 
 	constructor(dimension: number = 3) {
 		this.#dimension = dimension
 	}
 
-	loadGraph(graphData: GraphBasic) {
+	loadGraph(graphData: Graph) {
 		this.#graphData = graphData
 	}
 
-	initGraph(graphData: Graph) {
+	initGraph(graphData: GraphBasic) {
 		const { vertices, edges } = graphData
-		const data: GraphBasic = { vertices: [], edges: [] }
+		const data: Graph = { vertices: [], edges: [] }
 		this.#graphData = data
 
 		for (let i = 0; i < vertices.length; ++i) {
 			const vertex = vertices[i]
-			const vertexBasic: VertexBasic = { ...vertex, coord: [], velocity: [] }
+			const vertexBasic: Vertex = { ...vertex, coord: [], velocity: [] }
 			data.vertices.push(vertexBasic)
 
 			for (let j = 0; j < this.#dimension; ++j) {

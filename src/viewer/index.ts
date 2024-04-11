@@ -10,7 +10,7 @@ import {
 import { Line2, OrbitControls } from 'three/examples/jsm/Addons.js'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
 import { initGraph } from './graph'
-import { ForceSimulator, Graph } from '../lib'
+import { ForceSimulator, GraphBasic } from '../lib'
 import { updateGraph } from './draw'
 
 export { updateGraph }
@@ -31,7 +31,7 @@ export const glContext = {
 	control,
 	stats,
 	loopId: 0,
-	graph: {} as Graph,
+	graph: {} as GraphBasic,
 	points: {} as Points,
 	lines: [] as Line2[],
 }

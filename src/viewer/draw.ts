@@ -1,12 +1,12 @@
 import { Points } from 'three'
 import { glContext } from '.'
-import type { GraphBasic, VertexBasic, EdgeBasic } from '../lib'
+import type { Graph, Vertex, Edge } from '../lib'
 import type { Line2 } from 'three/examples/jsm/Addons.js'
 
 /**
  * update graph when vertices position changed
  */
-export function updateGraph(graph: GraphBasic) {
+export function updateGraph(graph: Graph) {
 	const { points, lines } = glContext
 
 	updateVertices(graph.vertices, points)
@@ -16,7 +16,7 @@ export function updateGraph(graph: GraphBasic) {
 	}
 }
 
-function updateVertices(vertices: VertexBasic[], points: Points) {
+function updateVertices(vertices: Vertex[], points: Points) {
 	const attr = points.geometry.getAttribute('position')
 
 	for (let i = 0; i < vertices.length; ++i) {
@@ -26,7 +26,7 @@ function updateVertices(vertices: VertexBasic[], points: Points) {
 	attr.needsUpdate = true
 }
 
-function updateEdge(edge: EdgeBasic, line: Line2) {
+function updateEdge(edge: Edge, line: Line2) {
 	const {
 		graph: { vertices },
 	} = glContext

@@ -1,8 +1,8 @@
-import { Graph } from '../lib'
+import { GraphBasic } from '../lib'
 import { uuid } from '../utils'
 
-export function geneData(vertexNum: number, edgeNum: number): Graph {
-	const graphData: Graph = {
+export function geneData(vertexNum: number, edgeNum: number): GraphBasic {
+	const graphData: GraphBasic = {
 		vertices: [],
 		edges: [],
 	}

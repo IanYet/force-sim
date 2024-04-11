@@ -1,2 +1,2 @@
-export type { Vertex, Edge, Graph, VertexBasic, EdgeBasic, GraphBasic } from './type'
+export type { VertexBasic, EdgeBasic, GraphBasic, Vertex, Edge, Graph } from './type'
 export { ForceSimulator } from './ForceSimulator'

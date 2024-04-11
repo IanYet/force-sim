@@ -1,5 +1,5 @@
 import { BufferAttribute, BufferGeometry, Color, Points, ShaderMaterial, Vector2 } from 'three'
-import { Edge, Graph, Vertex } from '../lib'
+import { EdgeBasic, GraphBasic, VertexBasic } from '../lib'
 import { glContext } from '.'
 import { Line2, LineGeometry, LineMaterial } from 'three/examples/jsm/Addons.js'
 
@@ -13,7 +13,7 @@ import { Line2, LineGeometry, LineMaterial } from 'three/examples/jsm/Addons.js'
  * @returns
  */
 export async function initGraph() {
-	const data: Graph = (await import('../data/data0.json')).default
+	const data: GraphBasic = (await import('../data/data0.json')).default
 	glContext.graph = data
 
 	const { scene } = glContext
@@ -29,7 +29,7 @@ export async function initGraph() {
 	}
 }
 
-async function initVertices(vertices: Vertex[]): Promise<Points> {
+async function initVertices(vertices: VertexBasic[]): Promise<Points> {
 	const num = vertices.length
 	const position = new Float32Array(num * 3)
 
@@ -66,7 +66,7 @@ const lineMat = new LineMaterial({
 	resolution: new Vector2(window.innerWidth, window.innerHeight),
 })
 
-function initEdge(edge: Edge): Line2 {
+function initEdge(edge: EdgeBasic): Line2 {
 	const {
 		graph: { vertices },
 	} = glContext
