@@ -43,7 +43,7 @@ export function geneData(vertexNum: number, edgeNum: number): GraphBasic {
 			Math.floor(Math.random() * edgeNum),
 		]
 
-		while (edgeSet.has(`${start}-${end}`) || edgeSet.has(`${end}-${start}`)) {
+		while (edgeSet.has(`${start}-${end}`) || edgeSet.has(`${end}-${start}`) || start === end) {
 			;[start, end] = [
 				Math.floor(Math.random() * edgeNum),
 				Math.floor(Math.random() * edgeNum),
