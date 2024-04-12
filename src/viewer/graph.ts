@@ -13,7 +13,7 @@ import { Line2, LineGeometry, LineMaterial } from 'three/examples/jsm/Addons.js'
  * @returns
  */
 export async function initGraph() {
-	const data: GraphBasic = (await import('../data/data1.json')).default
+	const data: GraphBasic = (await import('../data/data0.json')).default
 	glContext.graph = data
 
 	const { scene } = glContext

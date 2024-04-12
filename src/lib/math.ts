@@ -20,8 +20,8 @@ export function plus(v1: number[], v2: number[]): number[] {
 
 /**
  * length square
- * @param v 
- * @returns 
+ * @param v
+ * @returns
  */
 export function lengthSquare(v: number[]): number {
 	return v.reduce((res, n) => res + n ** 2, 0)
@@ -29,8 +29,8 @@ export function lengthSquare(v: number[]): number {
 
 /**
  * length
- * @param v 
- * @returns 
+ * @param v
+ * @returns
  */
 export function length(v: number[]): number {
 	return lengthSquare(v) ** 0.5
@@ -38,8 +38,8 @@ export function length(v: number[]): number {
 
 /**
  * normalize
- * @param v 
- * @returns 
+ * @param v
+ * @returns
  */
 export function normalize(v: number[]): number[] {
 	const l = length(v)
@@ -64,4 +64,23 @@ export function distanceSquare(v1: number[], v2: number[]): number {
  */
 export function distance(v1: number[], v2: number[]): number {
 	return distanceSquare(v1, v2) ** 0.5
+}
+
+/**
+ * multiply scalar
+ * @param v
+ * @param s
+ * @returns
+ */
+export function multiplyScalar(v: number[], s: number): number[] {
+	return v.map((n) => n * s)
+}
+
+/**
+ * reverse
+ * @param v
+ * @returns
+ */
+export function reverse(v: number[]): number[] {
+	return v.map((n) => 0 - n)
 }

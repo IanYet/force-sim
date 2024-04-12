@@ -1,3 +1,4 @@
+import { springForce } from './springForce'
 import { GraphBasic, Graph, Vertex } from './type'
 
 export class ForceSimulator {
@@ -6,10 +7,32 @@ export class ForceSimulator {
 	 * @default 3
 	 */
 	#dimension: number
+
+	get dimension() {
+		return this.#graphData
+	}
+
 	/**
 	 * graphData
 	 */
 	#graphData?: Graph
+
+	get graphData() {
+		return this.#graphData
+	}
+
+	/**
+	 * power mode
+	 */
+	#powerMode: 'cpu' | 'gpu' = 'cpu'
+
+	get powerMode() {
+		return this.#powerMode
+	}
+	/**
+	 *
+	 */
+	#rafId: number = 0
 
 	/**
 	 * Vertex radius, used if vertex.radius doesn't exist.
@@ -17,7 +40,7 @@ export class ForceSimulator {
 	 * Measured in **m**
 	 * @default 0
 	 */
-	#vRadius: number = 0
+	vRadius: number = 0
 
 	/**
 	 * Charge between vertices. Used if vertex.charge doesn't exist.
@@ -30,32 +53,18 @@ export class ForceSimulator {
 	 * Measured in **N * m^2 / kg^2**
 	 * @default 10
 	 */
-	#vCharge: number = 10
+	vCharge: number = 10
 	/**
 	 * Vertex weight, used if vertex.weight doesn't exist.
 	 *
 	 * Mesured in **kg**
 	 * @default 1
 	 */
-	#vWeight: number = 1
+	vWeight: number = 1
 	/**
-	 * Edge default length, at which neither tensile nor repulsive forces are produced.
-	 * Used if edge.length doesn't exist.
-	 *
-	 * Measured in **m**
-	 * @default 10
+	 * initial space between vertices
 	 */
-	#eLength: number = 10
-	/**
-	 * Force exerted by a edge on a vertex, following Hooke's law.
-	 * Used if edge.factor doesn't exist.
-	 *
-	 * Formula is **F = k * δx**, this value indiacates fator **k**
-	 *
-	 * Measured in **N/m**
-	 * @default 1
-	 */
-	#eFactor: number = 1
+	#space: number = 10
 
 	/**
 	 *
@@ -72,8 +81,9 @@ export class ForceSimulator {
 	 */
 	onEnd: (graphData: Graph) => void = () => {}
 
-	constructor(dimension: number = 3) {
+	constructor(dimension: number = 3, powerMode: 'cpu' | 'gpu' = 'cpu') {
 		this.#dimension = dimension
+		this.#powerMode = powerMode
 	}
 
 	loadGraph(graphData: Graph) {
@@ -121,15 +131,30 @@ export class ForceSimulator {
 		const coordIter = coordSet.entries()
 		for (let vertex of data.vertices) {
 			const coord = coordIter.next().value[0].split('~') as number[]
-			vertex.coord = coord.map((c) => c * this.#eLength)
+			vertex.coord = coord.map((c) => c * this.#space)
 		}
 
 		return data
 	}
 
-	tick() {
+	start(t?: number) {
+		this.#rafId = requestAnimationFrame((t: number) => this.start(t))
+		this.tick(t)
+	}
+
+	pause() {
+		cancelAnimationFrame(this.#rafId)
+	}
+
+	end() {
+		cancelAnimationFrame(this.#rafId)
+	}
+
+	tick(t?: number) {
 		if (!this.#graphData) return
 
+		// console.log(t)
+		springForce(5)(this, 0.0033)
 		this.onUpdate(this.#graphData)
 	}
 }
