@@ -153,8 +153,7 @@ export class ForceSimulator {
 	tick(t?: number) {
 		if (!this.#graphData) return
 
-		// console.log(t)
-		springForce(5)(this, 0.0033)
+		springForce(9)(this, 0.033)
 		this.onUpdate(this.#graphData)
 	}
 }

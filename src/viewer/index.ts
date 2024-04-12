@@ -1,4 +1,4 @@
-import { PerspectiveCamera, WebGLRenderer, Scene, Points } from 'three'
+import { PerspectiveCamera, WebGLRenderer, Scene, Points, AxesHelper } from 'three'
 import { Line2, OrbitControls } from 'three/examples/jsm/Addons.js'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
 import { initGraph, lineMat } from './graph'
@@ -51,6 +51,10 @@ export async function initViewer() {
 	camera.updateProjectionMatrix()
 
 	scene.add(camera)
+
+	const helper = new AxesHelper(40)
+	helper.position.set(-20, -20, -20)
+	scene.add(helper)
 
 	control.update()
 	control.enabled = true
