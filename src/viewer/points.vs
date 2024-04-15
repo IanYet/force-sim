@@ -1,9 +1,10 @@
 uniform float pointSize;
-// uniform mat4 projectionMatrix;
-// uniform mat4 modelViewMatrix;
-// uniform vec3 position;
+attribute int weight;
+attribute float radius;
+flat varying int vWeight;
 
 void main() {
-    gl_PointSize = pointSize;
+    vWeight = weight;
+    gl_PointSize = radius * pointSize;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }

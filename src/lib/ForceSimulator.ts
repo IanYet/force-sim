@@ -6,7 +6,7 @@ export class ForceSimulator {
 	 * dimension, used to slice vertex.coord
 	 * @default 3
 	 */
-	#dimension: number
+	#dimension = 3
 
 	get dimension() {
 		return this.#graphData
@@ -29,10 +29,31 @@ export class ForceSimulator {
 	get powerMode() {
 		return this.#powerMode
 	}
+
 	/**
-	 *
+	 * iter times
 	 */
-	#rafId: number = 0
+	#iterTimes = 1200
+
+	get iterTimes() {
+		return this.#iterTimes
+	}
+	/**
+	 * `requestAnimationFrame` id
+	 */
+	#rafId = 0
+	/**
+	 * forces
+	 */
+	#forces = new Map<string, (sim: ForceSimulator, t: number) => ForceSimulator>()
+
+	alpha = 1
+	alphaMin = 0.001
+	#alhpaDecay = 1 - Math.pow(this.alphaMin, 1 / this.#iterTimes)
+	/**
+	 * initial space between vertices
+	 */
+	#space = 10
 
 	/**
 	 * Vertex radius, used if vertex.radius doesn't exist.
@@ -40,7 +61,7 @@ export class ForceSimulator {
 	 * Measured in **m**
 	 * @default 0
 	 */
-	vRadius: number = 0
+	vRadius = 0
 
 	/**
 	 * Charge between vertices. Used if vertex.charge doesn't exist.
@@ -53,18 +74,14 @@ export class ForceSimulator {
 	 * Measured in **N * m^2 / kg^2**
 	 * @default 10
 	 */
-	vCharge: number = 10
+	vCharge = 10
 	/**
 	 * Vertex weight, used if vertex.weight doesn't exist.
 	 *
 	 * Mesured in **kg**
 	 * @default 1
 	 */
-	vWeight: number = 1
-	/**
-	 * initial space between vertices
-	 */
-	#space: number = 10
+	vWeight = 1
 
 	/**
 	 *
@@ -79,11 +96,23 @@ export class ForceSimulator {
 	/**
 	 *
 	 */
+	onPause: (graphData: Graph) => void = () => {}
+
+	/**
+	 *
+	 */
 	onEnd: (graphData: Graph) => void = () => {}
 
-	constructor(dimension: number = 3, powerMode: 'cpu' | 'gpu' = 'cpu') {
+	/**
+	 *
+	 * @param dimension default 3
+	 * @param powerMode default cpu
+	 * @param iterTimes default 300
+	 */
+	constructor(dimension: number = 3, powerMode: 'cpu' | 'gpu' = 'cpu', iterTimes: number = 300) {
 		this.#dimension = dimension
 		this.#powerMode = powerMode
+		this.#iterTimes = iterTimes
 	}
 
 	loadGraph(graphData: Graph) {
@@ -137,23 +166,48 @@ export class ForceSimulator {
 		return data
 	}
 
-	start(t?: number) {
-		this.#rafId = requestAnimationFrame((t: number) => this.start(t))
-		this.tick(t)
+	applyForce(name: string, force: (sim: ForceSimulator, t: number) => ForceSimulator) {
+		this.#forces.set(name, force)
+	}
+
+	start() {
+		if (!this.#graphData) return
+
+		this.#rafId = requestAnimationFrame((t: number) => {
+			this.#step(t)
+		})
+		this.onStart(this.#graphData)
 	}
 
 	pause() {
 		cancelAnimationFrame(this.#rafId)
+		this.onPause(this.#graphData!)
 	}
 
 	end() {
 		cancelAnimationFrame(this.#rafId)
+		this.alpha = 1
+		this.onEnd(this.#graphData!)
 	}
 
 	tick(t?: number) {
 		if (!this.#graphData) return
 
-		springForce(9)(this, 0.033)
+		for (let [_, force] of this.#forces) {
+			force(this, this.alpha / 30)
+		}
+		// springForce(9)(this, 0.033)
 		this.onUpdate(this.#graphData)
+	}
+
+	#step(t?: number) {
+		if (this.alpha < this.alphaMin) {
+			return this.end()
+		}
+
+		this.#rafId = requestAnimationFrame((t: number) => this.#step(t))
+
+		this.alpha -= this.alpha * this.#alhpaDecay
+		this.tick()
 	}
 }

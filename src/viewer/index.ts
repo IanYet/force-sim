@@ -1,4 +1,4 @@
-import { PerspectiveCamera, WebGLRenderer, Scene, Points, AxesHelper } from 'three'
+import { PerspectiveCamera, WebGLRenderer, Scene, Points, AxesHelper, GridHelper } from 'three'
 import { Line2, OrbitControls } from 'three/examples/jsm/Addons.js'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
 import { initGraph, lineMat } from './graph'
@@ -56,6 +56,11 @@ export async function initViewer() {
 	helper.position.set(-20, -20, -20)
 	scene.add(helper)
 
+	const girdHelper = new GridHelper(100, 20)
+	girdHelper.rotateX(Math.PI / 2)
+	girdHelper.position.setZ(-0.1)
+	scene.add(girdHelper)
+
 	control.update()
 	control.enabled = true
 
@@ -74,6 +79,9 @@ export async function initViewer() {
 
 	const sim = new ForceSimulator(3)
 	sim.initGraph(glContext.graph)
+
+	const sf = springForce(9)
+	sim.applyForce('spring', sf)
 
 	sim.onUpdate = updateGraph
 	sim.start()

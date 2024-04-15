@@ -16,7 +16,7 @@ import { distance, minus, multiplyScalar } from './math'
  */
 export const springForce =
 	(eLength: number = 10, eFactor: number = 1) =>
-	(sim: ForceSimulator, t: number) => {
+	(sim: ForceSimulator, t: number): ForceSimulator => {
 		const { vertices, edges } = sim.graphData!
 
 		for (let edge of edges) {
@@ -39,4 +39,6 @@ export const springForce =
 			vS.velocity.forEach((v, i) => (vS.velocity[i] = v + t * aS[i]))
 			vT.velocity.forEach((v, i) => (vT.velocity[i] = v + t * aT[i]))
 		}
+
+		return sim
 	}

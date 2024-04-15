@@ -32,6 +32,8 @@ export async function initGraph() {
 async function initVertices(vertices: VertexBasic[]): Promise<Points> {
 	const num = vertices.length
 	const position = new Float32Array(num * 3)
+	const weight = new Int32Array(num)
+	const radius = new Float32Array(num)
 
 	for (let i = 0; i < num; ++i) {
 		const vertex = vertices[i]
@@ -39,10 +41,15 @@ async function initVertices(vertices: VertexBasic[]): Promise<Points> {
 		position[i * 3 + 0] = vertex.coord?.[0] ?? 0
 		position[i * 3 + 1] = vertex.coord?.[1] ?? 0
 		position[i * 3 + 2] = vertex.coord?.[2] ?? 0
+
+		weight[i] = vertex.weight ?? 1
+		radius[i] = vertex.radius ?? 1
 	}
 
 	const geo = new BufferGeometry()
 	geo.setAttribute('position', new BufferAttribute(position, 3))
+	geo.setAttribute('weight', new BufferAttribute(weight, 1))
+	geo.setAttribute('radius', new BufferAttribute(radius, 1))
 
 	const mat = new ShaderMaterial({
 		uniforms: {
