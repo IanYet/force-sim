@@ -4,7 +4,7 @@ import './style.css'
 
 function main() {
 	initViewer()
-	// geneData(20, 20)
+	// geneData(63, 63)
 }
 
 main()

@@ -1,18 +1,11 @@
-import {
-	PerspectiveCamera,
-	WebGLRenderer,
-	Scene,
-	Mesh,
-	MeshBasicMaterial,
-	IcosahedronGeometry,
-	Points,
-} from 'three'
+import { PerspectiveCamera, WebGLRenderer, Scene, Points, AxesHelper } from 'three'
 import { Line2, OrbitControls } from 'three/examples/jsm/Addons.js'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
-import { initGraph } from './graph'
-import { Graph } from '../lib'
+import { initGraph, lineMat } from './graph'
+import { ForceSimulator, GraphBasic, springForce } from '../lib'
+import { updateGraph } from './draw'
 
-export { updateGraph } from './draw'
+export { updateGraph }
 
 const camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000)
 const renderer = new WebGLRenderer({ alpha: true, antialias: true })
@@ -30,7 +23,7 @@ export const glContext = {
 	control,
 	stats,
 	loopId: 0,
-	graph: {} as Graph,
+	graph: {} as GraphBasic,
 	points: {} as Points,
 	lines: [] as Line2[],
 }
@@ -39,7 +32,7 @@ export const glContext = {
  * initialize three
  * @returns
  */
-export function initViewer() {
+export async function initViewer() {
 	const { renderer, camera, scene, control, stats } = glContext
 	const el = document.getElementById('app')
 	//@ts-ignore
@@ -59,18 +52,17 @@ export function initViewer() {
 
 	scene.add(camera)
 
+	const helper = new AxesHelper(40)
+	helper.position.set(-20, -20, -20)
+	scene.add(helper)
+
 	control.update()
 	control.enabled = true
 
 	el.appendChild(stats.dom)
 
-	const cube = new Mesh(
-		new IcosahedronGeometry(5, 1),
-		new MeshBasicMaterial({ color: 0x888888, wireframe: true })
-	)
-	scene.add(cube)
-
 	window.addEventListener('resize', () => {
+		lineMat.resolution.set(window.innerWidth, window.innerHeight)
 		renderer.setSize(window.innerWidth, window.innerHeight)
 		camera.aspect = window.innerWidth / window.innerHeight
 		camera.updateProjectionMatrix()
@@ -78,7 +70,13 @@ export function initViewer() {
 
 	glContext.loopId = requestAnimationFrame(loop)
 
-	initGraph()
+	await initGraph()
+
+	const sim = new ForceSimulator(3)
+	sim.initGraph(glContext.graph)
+
+	sim.onUpdate = updateGraph
+	sim.start()
 }
 
 function loop(_: number) {

@@ -1,8 +1,8 @@
-import { Graph } from '../lib'
+import { GraphBasic } from '../lib'
 import { uuid } from '../utils'
 
-export function geneData(vertexNum: number, edgeNum: number): Graph {
-	const graphData: Graph = {
+export function geneData(vertexNum: number, edgeNum: number): GraphBasic {
+	const graphData: GraphBasic = {
 		vertices: [],
 		edges: [],
 	}
@@ -43,7 +43,7 @@ export function geneData(vertexNum: number, edgeNum: number): Graph {
 			Math.floor(Math.random() * edgeNum),
 		]
 
-		while (edgeSet.has(`${start}-${end}`) || edgeSet.has(`${end}-${start}`)) {
+		while (edgeSet.has(`${start}-${end}`) || edgeSet.has(`${end}-${start}`) || start === end) {
 			;[start, end] = [
 				Math.floor(Math.random() * edgeNum),
 				Math.floor(Math.random() * edgeNum),

@@ -4,7 +4,7 @@ force simulator for graph layout
 
 ## todo plan
 
--   [ ] implement viewer by threejs
+-   [x] implement viewer by threejs
 
     -   [x] initialize three
     -   [x] generate mock data
@@ -14,4 +14,9 @@ force simulator for graph layout
 
 -   [ ] implement simulator powered by cpu
 
+    -   [x] initialize vertices layout
+
 -   [ ] implement simulator powered by gpu
+
+    -   `readBuffer()` in `WebGPU`
+    -   `gl.getBufferSubData()` in `WebGL2`
