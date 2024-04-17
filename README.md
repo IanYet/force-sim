@@ -15,6 +15,8 @@ force simulator for graph layout
 -   [ ] implement simulator powered by cpu
 
     -   [x] initialize vertices layout
+    -   [x] spring force
+    -   [x] charge force
 
 -   [ ] implement simulator powered by gpu
 
