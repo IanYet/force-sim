@@ -2,7 +2,7 @@ import { PerspectiveCamera, WebGLRenderer, Scene, Points, AxesHelper, GridHelper
 import { Line2, OrbitControls } from 'three/examples/jsm/Addons.js'
 import Stats from 'three/examples/jsm/libs/stats.module.js'
 import { initGraph, lineMat } from './graph'
-import { ForceSimulator, GraphBasic, springForce } from '../lib'
+import { ForceSimulator, GraphBasic, chargeForce, springForce } from '../lib'
 import { updateGraph } from './draw'
 
 export { updateGraph }
@@ -80,8 +80,10 @@ export async function initViewer() {
 	const sim = new ForceSimulator(3)
 	sim.initGraph(glContext.graph)
 
-	const sf = springForce(9)
-	sim.applyForce('spring', sf)
+	const sf = springForce(7)
+	const cf = chargeForce()
+
+	sim.applyForce('spring', sf).applyForce('charge', cf)
 
 	sim.onUpdate = updateGraph
 	sim.start()

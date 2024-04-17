@@ -1,4 +1,3 @@
-import { springForce } from './springForce'
 import { GraphBasic, Graph, Vertex } from './type'
 
 export class ForceSimulator {
@@ -63,18 +62,6 @@ export class ForceSimulator {
 	 */
 	vRadius = 0
 
-	/**
-	 * Charge between vertices. Used if vertex.charge doesn't exist.
-	 *
-	 * Formula of force between vertices is **F = k * m1 * m2 / (r^2)**,
-	 * this value indicates factor **k**
-	 *
-	 * The positive sign indicates repulsion, while the negative sign indicates attraction.
-	 *
-	 * Measured in **N * m^2 / kg^2**
-	 * @default 10
-	 */
-	vCharge = 10
 	/**
 	 * Vertex weight, used if vertex.weight doesn't exist.
 	 *
@@ -166,8 +153,12 @@ export class ForceSimulator {
 		return data
 	}
 
-	applyForce(name: string, force: (sim: ForceSimulator, t: number) => ForceSimulator) {
+	applyForce(
+		name: string,
+		force: (sim: ForceSimulator, t: number) => ForceSimulator
+	): ForceSimulator {
 		this.#forces.set(name, force)
+		return this
 	}
 
 	start() {
@@ -196,7 +187,6 @@ export class ForceSimulator {
 		for (let [_, force] of this.#forces) {
 			force(this, this.alpha / 30)
 		}
-		// springForce(9)(this, 0.033)
 		this.onUpdate(this.#graphData)
 	}
 
