@@ -1,6 +1,8 @@
 {
 	"vertices": [
 		{ "id": "50b97f11-12a1-45f3-a68e-333dd93621b3", "weight": 1, "radius": 1 },
+		{ "id": "e00f46f7-0e9f-48f4-bbb9-0b6f3f1c4af4", "weight": 1, "radius": 1 },
+		{ "id": "81fa4daa-4ba6-4548-a50a-ab34d351f0a0", "weight": 1, "radius": 1 },
 		{ "id": "45349b4b-1b06-4caa-af08-ff991ad74031", "weight": 2, "radius": 2 }
 	],
 	"edges": [
