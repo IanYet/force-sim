@@ -32,7 +32,7 @@ export class ForceSimulator {
 	/**
 	 * iter times
 	 */
-	#iterTimes = 1200
+	#iterTimes = 300
 
 	get iterTimes() {
 		return this.#iterTimes
@@ -44,7 +44,7 @@ export class ForceSimulator {
 	/**
 	 * forces
 	 */
-	#forces = new Map<string, (sim: ForceSimulator, t: number) => ForceSimulator>()
+	#forces = new Map<string, (sim: ForceSimulator) => ForceSimulator>()
 
 	alpha = 1
 	alphaMin = 0.001
@@ -115,11 +115,13 @@ export class ForceSimulator {
 
 		for (let i = 0; i < vertices.length; ++i) {
 			const vertex = vertices[i]
-			const vertexBasic: Vertex = { ...vertex, coord: [], velocity: [] }
+			const vertexBasic: Vertex = { ...vertex, coord: [], velocity: [], acceleration: [] }
 			data.vertices.push(vertexBasic)
 
 			vertexBasic.velocity.length = d
 			vertexBasic.velocity.fill(0)
+			vertexBasic.acceleration.length = d
+			vertexBasic.acceleration.fill(0)
 		}
 
 		for (let edge of edges) {
@@ -153,10 +155,7 @@ export class ForceSimulator {
 		return data
 	}
 
-	applyForce(
-		name: string,
-		force: (sim: ForceSimulator, t: number) => ForceSimulator
-	): ForceSimulator {
+	applyForce(name: string, force: (sim: ForceSimulator) => ForceSimulator): ForceSimulator {
 		this.#forces.set(name, force)
 		return this
 	}
@@ -164,6 +163,7 @@ export class ForceSimulator {
 	start() {
 		if (!this.#graphData) return
 
+		console.time('raf time:')
 		this.#rafId = requestAnimationFrame((t: number) => {
 			this.#step(t)
 		})
@@ -176,17 +176,27 @@ export class ForceSimulator {
 	}
 
 	end() {
+		console.timeEnd('raf time:')
 		cancelAnimationFrame(this.#rafId)
 		this.alpha = 1
 		this.onEnd(this.#graphData!)
 	}
 
-	tick(t?: number) {
+	tick(t: number = 1 / 30) {
 		if (!this.#graphData) return
 
 		for (let [_, force] of this.#forces) {
-			force(this, this.alpha / 30)
+			force(this)
 		}
+
+		for (let vertex of this.#graphData.vertices) {
+			vertex.velocity.forEach((v, i) => {
+				vertex.coord[i] = vertex.coord[i] + v * t + (vertex.acceleration[i] * t * t) / 2
+				vertex.velocity[i] = v + vertex.acceleration[i] * t * 0.6 //? dont run as expected
+				vertex.acceleration[i] = 0
+			})
+		}
+
 		this.onUpdate(this.#graphData)
 	}
 
@@ -198,6 +208,6 @@ export class ForceSimulator {
 		this.#rafId = requestAnimationFrame((t: number) => this.#step(t))
 
 		this.alpha -= this.alpha * this.#alhpaDecay
-		this.tick()
+		this.tick(1 / 60)
 	}
 }

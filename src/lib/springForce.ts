@@ -1,5 +1,5 @@
 import type { ForceSimulator } from './ForceSimulator'
-import { distance, minus, multiplyScalar } from './math'
+import { distance, minus, multiplyScalar, plus } from './math'
 
 /**
  * Force exerted by a edge on two vertices, just likes a string, following Hooke's law.
@@ -16,7 +16,7 @@ import { distance, minus, multiplyScalar } from './math'
  */
 export const springForce =
 	(eLength: number = 10, eFactor: number = 1) =>
-	(sim: ForceSimulator, t: number): ForceSimulator => {
+	(sim: ForceSimulator): ForceSimulator => {
 		const { vertices, edges } = sim.graphData!
 
 		for (let edge of edges) {
@@ -31,13 +31,14 @@ export const springForce =
 
 			const wS = vS?.weight ?? sim.vWeight
 			const wT = vT?.weight ?? sim.vWeight
-			const aS = multiplyScalar(minus(vT.coord, vS.coord), f / r / wS)
-			const aT = multiplyScalar(minus(vS.coord, vT.coord), f / r / wT)
-
-			vS.coord.forEach((x, i) => (vS.coord[i] = x + vS.velocity[i] * t + 0.5 * aS[i] * t * t))
-			vT.coord.forEach((x, i) => (vT.coord[i] = x + vT.velocity[i] * t + 0.5 * aT[i] * t * t))
-			vS.velocity.forEach((v, i) => (vS.velocity[i] = v + t * aS[i]))
-			vT.velocity.forEach((v, i) => (vT.velocity[i] = v + t * aT[i]))
+			vS.acceleration = plus(
+				vS.acceleration,
+				multiplyScalar(minus(vT.coord, vS.coord), f / r / wS)
+			)
+			vT.acceleration = plus(
+				vT.acceleration,
+				multiplyScalar(minus(vS.coord, vT.coord), f / r / wT)
+			)
 		}
 
 		return sim

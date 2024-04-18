@@ -24,6 +24,7 @@ export interface Vertex {
 	id: string
 	coord: number[]
 	velocity: number[]
+	acceleration: number[]
 	radius?: number
 	charge?: number
 	weight?: number

@@ -1,5 +1,5 @@
 import type { ForceSimulator } from './ForceSimulator'
-import { distance, minus, multiplyScalar } from './math'
+import { distance, minus, multiplyScalar, plus } from './math'
 
 /**
  * Charge between vertices.
@@ -17,7 +17,7 @@ import { distance, minus, multiplyScalar } from './math'
  */
 export const chargeForce =
 	(k: number = 10, range: number = Number.MAX_SAFE_INTEGER) =>
-	(sim: ForceSimulator, t: number): ForceSimulator => {
+	(sim: ForceSimulator): ForceSimulator => {
 		const { vertices } = sim.graphData!
 
 		for (let v1 of vertices) {
@@ -29,12 +29,10 @@ export const chargeForce =
 
 				const m2 = v2.weight ?? sim.vWeight
 				const aScalar = (k * m2) / r ** 2
-				const a = multiplyScalar(minus(v1.coord, v2.coord), aScalar / r)
-
-				v1.coord.forEach(
-					(x, i) => (v1.coord[i] = x + v1.velocity[i] * t + 0.5 * a[i] * t * t)
+				v1.acceleration = plus(
+					v1.acceleration,
+					multiplyScalar(minus(v1.coord, v2.coord), aScalar / r)
 				)
-				v1.velocity.forEach((v, i) => (v1.velocity[i] = v + t * a[i]))
 			}
 		}
 
